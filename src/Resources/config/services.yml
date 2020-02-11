@@ -2,4 +2,4 @@ services:
   Terminal42\RootProtectionBundle\EventListener\RequireAuthenticationListener:
     public: true
     arguments:
-      ['@contao.framework', '@security.token_storage', '@security.authentication.trust_resolver']
+      ['@contao.framework', '@request_stack']

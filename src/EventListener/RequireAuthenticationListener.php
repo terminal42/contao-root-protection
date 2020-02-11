@@ -14,40 +14,34 @@ declare(strict_types=1);
 namespace Terminal42\RootProtectionBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\PageError403;
 use Contao\PageModel;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 final class RequireAuthenticationListener
 {
     private $framework;
 
-    private $tokenStorage;
+    private $requestStack;
 
-    private $trustResolver;
-
-    public function __construct(
-        ContaoFramework $framework,
-        TokenStorageInterface $tokenStorage,
-        AuthenticationTrustResolverInterface $trustResolver
-    ) {
-        $this->framework     = $framework;
-        $this->tokenStorage  = $tokenStorage;
-        $this->trustResolver = $trustResolver;
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
+    {
+        $this->framework    = $framework;
+        $this->requestStack = $requestStack;
     }
 
     public function onGetPageLayout(PageModel $page): void
     {
-        $token = $this->tokenStorage->getToken();
-        if (null === $token || false === $this->trustResolver->isAnonymous($token)) {
+        if (null === $request = $this->requestStack->getCurrentRequest()) {
             return;
         }
 
         $this->framework->initialize();
 
-        /** @var PageModel $adapter */
-        $adapter  = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $adapter->findByPk($page->rootId);
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $rootPage    = $pageAdapter->findByPk($page->rootId);
 
         if (null === $rootPage || !$rootPage->rootProtection) {
             return;
@@ -56,17 +50,27 @@ final class RequireAuthenticationListener
         $username = (string) $rootPage->rootProtectionUsername;
         $password = (string) $rootPage->rootProtectionPassword;
 
-        if (!$this->isAuthenticated($username, $password)) {
-            header('HTTP/1.1 401 Authorization Required');
-            header('WWW-Authenticate: Basic realm="Access denied"');
-            exit;
+        if ($username === $request->getUser() && $password === $request->getPassword()) {
+            // Authenticated.
+            return;
         }
-    }
 
-    private function isAuthenticated(string $username, string $password): bool
-    {
-        return !empty($_SERVER['PHP_AUTH_USER'])
-               && $username === $_SERVER['PHP_AUTH_USER']
-               && $password === $_SERVER['PHP_AUTH_PW'];
+        // Find a 401 page if given
+        // Contao 4.4 does not have a 401 page type yet
+        $obj403 = $pageAdapter->find403ByPid($rootPage->id);
+        if (null !== $obj403 && !$obj403->autoforward) {
+            /** @var PageError403 $errorPage */
+            $errorPage = new $GLOBALS['TL_PTY']['error_403']();
+
+            $response = $errorPage->getResponse($rootPage);
+        } else {
+            $response = new Response('401 Authentication Required');
+        }
+
+        $response->headers->set('WWW-Authenticate', 'Basic realm="Access denied"');
+
+        $response->setStatusCode(Response::HTTP_UNAUTHORIZED)->send();
+
+        exit;
     }
 }
