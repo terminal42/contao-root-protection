@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Terminal42\RootProtectionBundle\EventListener;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -58,8 +59,8 @@ final class RequireAuthenticationListener
 
         $response->headers->set('WWW-Authenticate', 'Basic realm="Access denied"');
 
-        $response->setStatusCode(Response::HTTP_UNAUTHORIZED)->send();
+        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
 
-        exit;
+        throw new ResponseException($response);
     }
 }
