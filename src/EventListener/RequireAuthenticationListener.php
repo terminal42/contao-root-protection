@@ -55,11 +55,8 @@ final class RequireAuthenticationListener
             return;
         }
 
-        $response = new Response('401 Authentication Required');
-
+        $response = new Response('401 Authentication Required', Response::HTTP_UNAUTHORIZED);
         $response->headers->set('WWW-Authenticate', 'Basic realm="Access denied"');
-
-        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
 
         throw new ResponseException($response);
     }
