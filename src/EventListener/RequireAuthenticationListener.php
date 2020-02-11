@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Terminal42\RootProtectionBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageError403;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,17 +54,7 @@ final class RequireAuthenticationListener
             return;
         }
 
-        // Find a 401 page if given
-        // Contao 4.4 does not have a 401 page type yet
-        $obj403 = $pageAdapter->find403ByPid($rootPage->id);
-        if (null !== $obj403 && !$obj403->autoforward) {
-            /** @var PageError403 $errorPage */
-            $errorPage = new $GLOBALS['TL_PTY']['error_403']();
-
-            $response = $errorPage->getResponse($rootPage);
-        } else {
-            $response = new Response('401 Authentication Required');
-        }
+        $response = new Response('401 Authentication Required');
 
         $response->headers->set('WWW-Authenticate', 'Basic realm="Access denied"');
 
