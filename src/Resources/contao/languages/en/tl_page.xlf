@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en">
+        <body>
+            <trans-unit id="tl_page.rootProtectionLegend">
+                <source>Root protection</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtection.0">
+                <source>Enable root protection</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtection.1">
+                <source>Require a username and password prior visitors can access this page.</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtectionUsername.0">
+                <source>Username</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtectionUsername.1">
+                <source>Set a username.</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtectionPassword.0">
+                <source>Password</source>
+            </trans-unit>
+            <trans-unit id="tl_page.rootProtectionPassword.1">
+                <source>Set a password.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
