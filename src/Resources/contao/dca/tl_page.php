@@ -12,11 +12,17 @@ declare(strict_types=1);
  */
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 
-PaletteManipulator::create()
+$paletteManipulator = PaletteManipulator::create()
     ->addLegend('rootProtection_legend', 'publish_legend', PaletteManipulator::POSITION_BEFORE)
-    ->addField('rootProtection', 'rootProtection_legend', PaletteManipulator::POSITION_APPEND)
-    ->applyToPalette('root', 'tl_page');
+    ->addField('rootProtection', 'rootProtection_legend', PaletteManipulator::POSITION_APPEND);
+
+try {
+    $paletteManipulator->applyToPalette('rootfallback', 'tl_page');
+} catch (PaletteNotFoundException $e) {
+    $paletteManipulator->applyToPalette('root', 'tl_page');
+}
 
 $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'rootProtection';
 
