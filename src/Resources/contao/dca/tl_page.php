@@ -19,9 +19,10 @@ $paletteManipulator = PaletteManipulator::create()
     ->addField('rootProtection', 'rootProtection_legend', PaletteManipulator::POSITION_APPEND);
 
 try {
+    // Add to root palette first, second call might throw exception
+    $paletteManipulator->applyToPalette('root', 'tl_page');
     $paletteManipulator->applyToPalette('rootfallback', 'tl_page');
 } catch (PaletteNotFoundException $e) {
-    $paletteManipulator->applyToPalette('root', 'tl_page');
 }
 
 $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'rootProtection';
