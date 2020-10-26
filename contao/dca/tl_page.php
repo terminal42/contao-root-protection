@@ -2,28 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * Root Protection Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- * @link       http://github.com/terminal42/contao-root-protection
- */
-
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
-use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 
 $paletteManipulator = PaletteManipulator::create()
     ->addLegend('rootProtection_legend', 'publish_legend', PaletteManipulator::POSITION_BEFORE)
-    ->addField('rootProtection', 'rootProtection_legend', PaletteManipulator::POSITION_APPEND);
-
-try {
-    // Add to root palette first, second call might throw exception
-    $paletteManipulator->applyToPalette('root', 'tl_page');
-    $paletteManipulator->applyToPalette('rootfallback', 'tl_page');
-} catch (PaletteNotFoundException $e) {
-}
+    ->addField('rootProtection', 'rootProtection_legend', PaletteManipulator::POSITION_APPEND)
+    ->applyToPalette('root', 'tl_page')
+    ->applyToPalette('rootfallback', 'tl_page')
+;
 
 $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][] = 'rootProtection';
 

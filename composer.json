@@ -1,42 +1,48 @@
 {
-  "name": "terminal42/contao-root-protection",
-  "type": "contao-bundle",
-  "description": "A Contao bundle that allows you to protect individual root pages via HTTP Basic Authentication",
-  "homepage": "https://github.com/terminal42/contao-root-protection",
-  "keywords": [
-    "contao",
-    "root",
-    "htaccess",
-    "protection"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "terminal42 gmbh",
-      "homepage": "https://www.terminal42.ch"
+    "name": "terminal42/contao-root-protection",
+    "type": "contao-bundle",
+    "description": "A Contao bundle that allows you to protect individual root pages via HTTP Basic Authentication",
+    "homepage": "https://github.com/terminal42/contao-root-protection",
+    "keywords": ["contao", "root", "htaccess", "protection"],
+    "license": "MIT",
+    "authors": [{
+        "name": "terminal42 gmbh",
+        "homepage": "http://www.terminal42.ch"
+    }],
+    "funding": [{
+        "type": "github",
+        "url": "https://github.com/terminal42"
+    }],
+    "support": {
+        "issues": "https://github.com/terminal42/contao-root-protection/issues",
+        "source": "https://github.com/terminal42/contao-root-protection",
+        "forum": "https://community.contao.org"
+    },
+    "autoload": {
+        "psr-4": {
+            "Terminal42\\RootProtectionBundle\\": "src"
+        }
+    },
+    "require": {
+        "php": "^7.4",
+        "contao/core-bundle": "^4.9",
+        "symfony/config": "^3.3 || ^4.0 || ^5.0",
+        "symfony/dependency-injection": "^3.3 || ^4.0 || ^5.0",
+        "symfony/http-kernel": "^3.3 || ^4.0 || ^5.0"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.7",
+        "contao/easy-coding-standard": "^3.0"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.9 || >=3.0"
+    },
+    "extra": {
+        "contao-manager-plugin": "Terminal42\\RootProtectionBundle\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "cs-fixer": [
+            "vendor/bin/ecs check src/ --fix --ansi"
+        ]
     }
-  ],
-  "support": {
-    "issues": "https://github.com/terminal42/contao-root-protection/issues",
-    "source": "https://github.com/terminal42/contao-root-protection"
-  },
-  "autoload": {
-    "psr-4": {
-      "Terminal42\\RootProtectionBundle\\": "src"
-    }
-  },
-  "require": {
-    "php": "^7.1",
-    "contao/core-bundle": "^4.4",
-    "symfony/config": "^3.3 || ^4.0",
-    "symfony/dependency-injection": "^3.3 || ^4.0",
-    "symfony/http-kernel": "^3.3 || ^4.0"
-  },
-  "require-dev": {
-    "contao/manager-plugin": "^2.7",
-    "friendsofphp/php-cs-fixer": "^2.12"
-  },
-  "extra": {
-    "contao-manager-plugin": "Terminal42\\RootProtectionBundle\\ContaoManager\\Plugin"
-  }
 }

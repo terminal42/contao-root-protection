@@ -2,36 +2,30 @@
 
 declare(strict_types=1);
 
-/*
- * Root Protection Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- * @link       http://github.com/terminal42/contao-root-protection
- */
-
 namespace Terminal42\RootProtectionBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Hook("getPageLayout")
+ */
 final class RequireAuthenticationListener
 {
-    private $framework;
-
-    private $requestStack;
+    private ContaoFramework $framework;
+    private RequestStack $requestStack;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
-        $this->framework    = $framework;
+        $this->framework = $framework;
         $this->requestStack = $requestStack;
     }
 
-    public function onGetPageLayout(PageModel $page): void
+    public function __invoke(PageModel $page): void
     {
         if (null === $request = $this->requestStack->getCurrentRequest()) {
             return;
@@ -41,7 +35,7 @@ final class RequireAuthenticationListener
 
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage    = $pageAdapter->findByPk($page->rootId);
+        $rootPage = $pageAdapter->findByPk($page->rootId);
 
         if (null === $rootPage || !$rootPage->rootProtection) {
             return;

@@ -1,5 +1,4 @@
-terminal42/contao-root-protection
-=====================================
+# terminal42/contao-root-protection
 
 A Contao bundle that allows you to protect individual root pages via HTTP Basic Authentication.
 
@@ -27,13 +26,10 @@ Add a composer dependency for this bundle. Therefore, change in the project root
 composer require terminal42/contao-root-protection
 ```
 
-Depending on your environment, the command can differ, i.e. starting with `php composer.phar …` if you do not have 
+Depending on your environment, the command can differ, i.e. starting with `php composer.phar …` if you do not have
 composer installed globally.
 
 Then, update the database via the Contao install tool.
-
-
-## Configuration
 
 
 ## License
