@@ -1,6 +1,7 @@
 services:
-    Terminal42\RootProtectionBundle\EventListener\RequireAuthenticationListener:
-        public: true
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
+    _defaults:
+        autoconfigure: true
+        autowire: true
+
+    Terminal42\RootProtectionBundle\:
+        resource: ../src/
