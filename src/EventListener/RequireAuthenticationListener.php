@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace Terminal42\RootProtectionBundle\EventListener;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @Hook("getPageLayout")
- */
+#[AsHook('getPageLayout')]
 final class RequireAuthenticationListener
 {
-    private ContaoFramework $framework;
-    private RequestStack $requestStack;
-
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
-    {
-        $this->framework = $framework;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function __invoke(PageModel $page): void
